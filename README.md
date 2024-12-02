@@ -6,73 +6,85 @@
 
 \* _Este sistema é um case participativo dos três cases pedidos pelo professor Lucas Rodolfo, feitos em paralelo com o auxilio de Adryan Rafael, Lucas Vinícius e Gabriel de Souza._
 
-
 ## Como este sistema funciona?
 
-O sistema de gerenciamento de eventos possui um sistema simples de utilização, estando nas mãos do usuário a utilização plena do sistema com as seguintes funções:
+O sistema de gerenciamento de eventos permite ao usuário realizar diversas operações relacionadas à gestão de eventos, como criação de eventos, gerenciamento de participantes e visualização de estatísticas. Com a refatoração recente, o sistema agora está mais modular e funcional, utilizando estruturas de dados como `ArrayList` para otimizar o gerenciamento das informações.
 
-- Cadastro de eventos
-- Exclusão de eventos
-- Adicição de participantes
-- Remoção de participantes
-- Análises referente aos eventos
+As funcionalidades disponíveis no sistema são:
 
-## Classes
+- **Cadastro de eventos**: Permite criar novos eventos com nome, capacidade e local.
+- **Exclusão de eventos**: Permite remover eventos do sistema.
+- **Adição de participantes**: Permite cadastrar participantes em eventos, caso haja espaço disponível.
+- **Remoção de participantes**: Permite remover participantes de eventos.
+- **Exibição de estatísticas**: Exibe informações gerais sobre todos os eventos ou detalhes específicos sobre um evento.
 
-As classes contemplam a orientação aos objetos definidos ao longo do projeto, contendo uma classe para definição de "Local", "Event", "Participante" e uma classe adicional para o condensamento das classes referidas e utilização efetiva das mesmas.
+## Estrutura de Classes
 
-### -> Event
+As classes foram refatoradas para serem mais coesas, com o objetivo de melhorar a reutilização de código e seguir boas práticas de orientação a objetos. As principais classes são:
+
+### -> Event (Evento)
   
 \* _Classe e métodos definidos por Jonas_
 
-Esta classe possui a finalidade de definir um evento. O evento possui: Nome, Capacidade, Participantes Inscritos (CONTAGEM NUMÉRICA), um Array de participantes e o local. Seus atributos estão protegidos por encapsulamento e o seu construtor está definido, bem como os métodos _getters_ e _setters._
+A classe **Event** representa um evento no sistema. Cada evento possui os seguintes atributos:
 
-A classe Event pode: 
-- Adicionar participantes a si mesma(caso o objeto evento permita), bem como removê-los.
-- Salvar eventos criados
-- Mostrar estatísticas de eventos
-- Atualizar os eventos no arquivo CSV
+- **Nome**: O nome do evento.
+- **Capacidade**: O número máximo de participantes do evento.
+- **Participantes Inscritos**: A lista de participantes registrados no evento.
+- **Local**: O local onde o evento ocorre.
 
-### -> Local
+A classe Event permite:
 
-\* _Classe e métodos definidos por Roberval_
+- Adicionar participantes ao evento, caso haja capacidade disponível.
+- Remover participantes do evento.
+- Exibir as estatísticas de participantes do evento, como o número de inscritos e o total de capacidade.
 
-Esta classe possui a finalidade de definir um local. Um local possui: Nome, Capacidade, Disponibilidade e um Array de eventos atribuídos a ele. Seus atributos estão protegidos por encapsulamento e seu construtor está definido, bem como os métodos _getters_ e _setters_.
-
-A classe Local pode:
-- Receber um evento
-- Salvar um local
-- Mostrar um local
-- Verificar a ocupação
-
-### -> Participante
+### -> Local (Local do Evento)
 
 \* _Classe e métodos definidos por Roberval_
 
-Esta classe possui a finalidade de definir um participante. Um participante possui: Nome. Os participantes podem ser adicionados a eventos e serem removidos deles.
+A classe **Local** representa os locais onde os eventos são realizados. Cada local possui os seguintes atributos:
 
-### -> MenuEventos
+- **Nome**: O nome do local.
+- **Capacidade**: A capacidade máxima do local.
+- **Disponibilidade**: Um indicador de se o local está disponível para novos eventos.
+- **Eventos Atribuídos**: A lista de eventos realizados no local.
+
+A classe Local permite:
+
+- Atribuir eventos a um local.
+- Verificar a ocupação do local (se já há eventos programados).
+- Exibir informações detalhadas sobre o local.
+
+### -> Participante (Participante do Evento)
+
+\* _Classe e métodos definidos por Roberval_
+
+A classe **Participante** representa um participante em um evento. Cada participante tem um nome e pode ser associado a um evento. Os participantes podem ser adicionados ou removidos dos eventos.
+
+A classe Participante agora herda de **Usuario** para reaproveitar funcionalidades comuns, como o nome.
+
+### -> MenuEventos (Menu de Navegação do Sistema)
 
 \* _Classe e métodos feitos em conjunto por Jonas e Roberval_
 
-Esta classe possui a finalidade de usar as classes e métodos descritos anteriormente de forma coesa e funcional para o usuário final. A classe possui uma função `main(String[] args)` que inicia os locais durante uma nova execução e oferece ao usuario uma serie de opções de utilização do sistema de acordo com um input numérico.
+A classe **MenuEventos** centraliza a interação com o usuário. Ela oferece um menu principal que permite o acesso a todas as funcionalidades do sistema, como a criação e exclusão de eventos, e a adição ou remoção de participantes. O menu é exibido repetidamente até que o usuário escolha sair.
 
-O usuário, agora, pode:
+As opções disponíveis no menu são:
 
-- Criar eventos
-- Excluir eventos
-- Adicionar participantes a eventos
-- Remover participantes de eventos
-- Exibir opções de análise de estatisticas
-- Exibir informações gerais dos eventos
-- Exibir informações especificas dos eventos
+- **Criar evento**: Permite criar um evento novo, especificando nome, capacidade e local.
+- **Excluir evento**: Permite excluir um evento existente.
+- **Adicionar participante**: Permite cadastrar um participante em um evento.
+- **Remover participante**: Permite remover um participante de um evento.
+- **Exibir estatísticas gerais**: Exibe informações gerais sobre todos os eventos.
+- **Exibir estatísticas de evento específico**: Exibe informações detalhadas sobre um evento específico.
 
-Dentro das opções de análise, temos 5 opções que respondem e facilitam uma tomada de decisão no gerenciamento de eventos. São elas:
+---
 
-- Qual o evento registrado com maior taxa de adesão?
-- Qual o evento registrado com a menor taxa de adesão?
-- Qual o evento com a menor capacidade?
-- Qual o total de participantes em todos os eventos?
-- Qual o local mais popular para fazer eventos?
+### Alterações Importantes no Sistema:
 
+- **Uso de ArrayList**: O sistema agora utiliza `ArrayList` para gerenciar os participantes e eventos, proporcionando maior flexibilidade e simplificação no código.
+- **Remoção de manipulação de arquivos**: A lógica de leitura e escrita de arquivos foi removida, e os dados agora são manipulados diretamente em memória.
+- **Melhoria nas buscas e interações**: O sistema foi aprimorado com métodos de busca para eventos e participantes, tornando-o mais eficiente e fácil de usar.
 
+Este sistema agora oferece uma experiência mais fluida e organizada, permitindo ao usuário gerenciar eventos e participantes de forma simplificada e com um design orientado a objetos mais eficiente.

@@ -1,3 +1,0 @@
-String,2,20,0,jose anchieta,Mario Ricardo
-Case,0,100,4
-tentativa,0,20,0

@@ -1,42 +1,49 @@
-import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
-public class Participante {
-    private String nomeParticipante;
+public class Participante extends Usuario implements Buscavel<Participante> {
+    private static List<Participante> participantes = new ArrayList<>();
 
-    private Participante(String nomeParticipante) {
-        this.nomeParticipante = nomeParticipante;
-    }
-    public static Participante criarParticipante(String nomeParticipante) {
-        return new Participante(nomeParticipante);
-    }
-    public String getNomeParticipante() {
-        return nomeParticipante;
+    public Participante(String nome) {
+        super(nome);
     }
 
-    public void salvarParticipante(String nomeArquivo) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(nomeArquivo, true))) {
-            bw.write(nomeParticipante);
-            bw.newLine();
-        } catch (IOException e) {
-            System.out.println("Erro ao salvar o participante: " + e.getMessage());
+    // Método para cadastrar um participante
+    public static Participante cadastrarParticipante(String nome) {
+        Participante participante = new Participante(nome);
+        participantes.add(participante);
+        return participante;
+    }
+
+    // Método para remover um participante
+    public static boolean removerParticipante(String nome) {
+        return participantes.removeIf(p -> p.getNome().equalsIgnoreCase(nome));
+    }
+
+    // Implementação da interface Buscavel
+    @Override
+    public Participante buscar(String nome) {
+        for (Participante p : participantes) {
+            if (p.getNome().equalsIgnoreCase(nome)) {
+                return p;
+            }
         }
+        return null;
     }
 
-    public static void cadastrarParticipante(String nomeArquivoEvento, String nomeEvento, String nomeParticipante) {
-        try {
-            Event.atualizarEvento(nomeArquivoEvento, nomeEvento, nomeParticipante, true);
-            System.out.println("Participante " + nomeParticipante + " cadastrado no evento " + nomeEvento);
-        } catch (Exception e) {
-            System.out.println("Erro ao cadastrar participante: " + e.getMessage());
+    // Sobrecarga para busca por critério
+    public static List<Participante> buscarPorParteDoNome(String parteNome) {
+        List<Participante> resultados = new ArrayList<>();
+        for (Participante p : participantes) {
+            if (p.getNome().toLowerCase().contains(parteNome.toLowerCase())) {
+                resultados.add(p);
+            }
         }
+        return resultados;
     }
 
-    public static void removerParticipante(String nomeArquivoEvento, String nomeEvento, String nomeParticipante) {
-        try {
-            Event.atualizarEvento(nomeArquivoEvento, nomeEvento, nomeParticipante, false);
-            System.out.println("Participante " + nomeParticipante + " removido do evento " + nomeEvento);
-        } catch (Exception e) {
-            System.out.println("Erro ao remover participante: " + e.getMessage());
-        }
+    // Método para listar todos os participantes
+    public static List<Participante> listarParticipantes() {
+        return new ArrayList<>(participantes);
     }
 }
